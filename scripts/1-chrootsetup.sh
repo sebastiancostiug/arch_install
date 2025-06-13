@@ -47,7 +47,7 @@ fi
 pacman -Sy --noconfirm
 
 log "Installing packages from packages.txt..."
-pacman -Syu --noconfirm $(grep -vE '^#' /root/arch_setup/scripts/packages.txt) | tee -a "$LOGFILE"
+pacman -Syu --noconfirm $(grep -vE '^#' /root/arch_install/scripts/packages.txt) | tee -a "$LOGFILE"
 
 log "Setting root password..."
 passwd
@@ -68,6 +68,6 @@ grub-mkconfig -o /boot/grub/grub.cfg
 log "Enabling system services from services.txt..."
 while read -r svc; do
   systemctl enable --now "$svc"
-done < /root/arch_setup/scripts/services.txt
+done < /root/arch_install/scripts/services.txt
 
 success "Chroot setup complete."

@@ -28,7 +28,7 @@ log "Starting Phase 0: Pre-install (run from Live USB)"
 
 log "Starting Phase 1: Chroot Setup (system configuration)"
 echo "[+] Entering chroot for system configuration..."
-arch-chroot /mnt ./scripts/1-chrootsetup.sh "$USERNAME" "$HOSTNAME"
+arch-chroot /mnt /root/arch_install/scripts/1-chrootsetup.sh "$USERNAME" "$HOSTNAME"
 
 log "Starting Phase 2: Post-install user setup (run as new user)"
 cp -r ./user-setup /mnt/home/"$USERNAME"/

@@ -66,7 +66,8 @@ log "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
 
 log "Copying setup scripts to new system..."
-cp -r . /mnt/root/arch_setup
-chmod +x /mnt/root/arch_setup/*.sh
+mkdir -p /mnt/root/arch_install/scripts
+cp -r ./scripts /mnt/root/arch_install/
+chmod +x /mnt/root/arch_install/scripts/*.sh
 
 success "Phase 0 complete. Ready for chroot."
