@@ -49,7 +49,7 @@ fi
 pacman -Sy --noconfirm
 
 log "Installing packages from packages.txt..."
-pacman -Syu --noconfirm $(grep -vE '^#' /root/arch_setup/scripts/packages.txt) | tee -a "$LOGFILE"
+pacman -Syu --noconfirm $(grep -vE '^#' /root/arch_install/scripts/packages.txt) | tee -a "$LOGFILE"
 
 log "Setting root password..."
 passwd
@@ -69,7 +69,20 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 log "Enabling system services from services.txt..."
 while read -r svc; do
-  systemctl enable --now "$svc"
+  if systemctl list-unit-files | grep -q "^$svc"; then
+    systemctl enable --now "$svc"
+  elif systemctl list-unit-files | grep -q "^$svc.service"; then
+    systemctl enable --now "$svc.service"
+  elif [[ -x "/usr/bin/$svc" ]] && systemctl list-unit-files | grep -q ".service"; then
+    match=$(systemctl list-unit-files | grep ".service" | grep -m1 "$svc")
+    if [[ -n "$match" ]]; then
+      systemctl enable --now "${match%% *}"
+    else
+      err "Service $svc exists as binary but no matching .service file found, skipping."
+    fi
+  else
+    err "Service $svc does not exist, skipping."
+  fi
 done < /root/arch_install/scripts/services.txt
 
 success "Chroot setup complete."
