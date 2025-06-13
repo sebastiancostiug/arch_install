@@ -36,7 +36,9 @@ cat > /etc/hosts <<EOF
 127.0.1.1 $HOSTNAME.localdomain $HOSTNAME
 EOF
 
-log "Enabling repos and updating system..."
+# === ENSURE REPOS ARE PRESENT BEFORE ANY PACMAN COMMAND ===
+log "Ensuring [multilib] repo is enabled in /etc/pacman.conf..."
+sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
 if ! grep -q '\[multilib\]' /etc/pacman.conf; then
   echo -e '\n[multilib]\nInclude = /etc/pacman.d/mirrorlist' >> /etc/pacman.conf
 fi
@@ -47,7 +49,7 @@ fi
 pacman -Sy --noconfirm
 
 log "Installing packages from packages.txt..."
-pacman -Syu --noconfirm $(grep -vE '^#' /root/arch_install/scripts/packages.txt) | tee -a "$LOGFILE"
+pacman -Syu --noconfirm $(grep -vE '^#' /root/arch_setup/scripts/packages.txt) | tee -a "$LOGFILE"
 
 log "Setting root password..."
 passwd
@@ -68,6 +70,6 @@ grub-mkconfig -o /boot/grub/grub.cfg
 log "Enabling system services from services.txt..."
 while read -r svc; do
   systemctl enable --now "$svc"
-done < /root/arch_install/scripts/services.txt
+done < /root/arch_setup/scripts/services.txt
 
 success "Chroot setup complete."

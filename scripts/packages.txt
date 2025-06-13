@@ -60,7 +60,6 @@ php
 php-gd
 nodejs
 npm
-code   # VSCode
 docker
 docker-compose
 
