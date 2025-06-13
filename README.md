@@ -21,12 +21,14 @@ This installer sets up a **minimal, modern Arch Linux system** with:
 - **Disk layout:**
 
   - The installer expects **2 partitions** on your target disk:
-    - **EFI partition:** ~512MB, type EFI System (FAT32)
-    - **Root partition:** Rest of disk, type Linux filesystem (formatted as BTRFS)
+    - **EFI partition:** ~512MB, type EFI System
+    - **Root partition:** Rest of disk, type Linux filesystem
   - Example for `/dev/nvme1n1`:
 
-    - `/dev/nvme1n1p1` — EFI (512MB, FAT32)
-    - `/dev/nvme1n1p2` — Root (BTRFS)
+    - `/dev/nvme1n1p1` — EFI
+    - `/dev/nvme1n1p2` — Root
+
+  - They will be formatted by the script as FAT32 the EFI partition and BTRFS the root partition (you don't need to format them just provide the 2 partitions in you partition setup)
 
   - Any other partitions can be created and handled separately but the installer needs these two
 

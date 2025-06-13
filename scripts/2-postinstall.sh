@@ -19,7 +19,7 @@ chsh -s $(which zsh)
 log "Installing Oh My Zsh and plugins..."
 export ZSH="$HOME/.oh-my-zsh"
 rm -rf "$ZSH"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
 ZSH_CUSTOM="$ZSH/custom"
 for repo in \
   "https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k" \
@@ -30,13 +30,14 @@ do
 done
 
 # === Dotfiles ===
+DOTFILES_DIR="$HOME/Downloads/dotfiles"
 log "Setting up dotfiles..."
-for f in dotfiles/.zshrc; do
+for f in "$DOTFILES_DIR/.zshrc"; do
   [[ -e "$HOME/$(basename $f)" ]] && mv "$HOME/$(basename $f)" "$HOME/$(basename $f).bak"
-  ln -sf "$(pwd)/$f" "$HOME/$(basename $f)"
+  ln -sf "$f" "$HOME/$(basename $f)"
 done
 mkdir -p "$HOME/.config"
-cp -rn dotfiles/.config/* "$HOME/.config/"
+cp -rn "$DOTFILES_DIR/.config/"* "$HOME/.config/"
 
 # === Flatpak permissions ===
 if command -v flatpak >/dev/null; then
@@ -99,3 +100,16 @@ if [[ -d ~/.ssh ]]; then
 fi
 
 success "User setup complete."
+
+# ===Cleanup: remove this script and dotfiles ===
+SCRIPT_PATH="$HOME/Downloads/2-postinstall.sh"
+DOTFILES_PATH="$HOME/Downloads/dotfiles"
+if [[ -d "$DOTFILES_PATH" ]]; then
+  rm -rf "$DOTFILES_PATH"
+  log "Removed $DOTFILES_PATH"
+fi
+if [[ -f "$SCRIPT_PATH" ]]; then
+  rm -f "$SCRIPT_PATH"
+  log "Removed $SCRIPT_PATH"
+fi
+

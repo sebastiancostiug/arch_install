@@ -32,6 +32,7 @@ arch-chroot /mnt /root/arch_install/scripts/1-chrootsetup.sh "$USERNAME" "$HOSTN
 
 log "Starting Phase 2: Post-install user setup (manual step)"
 arch-chroot /mnt bash -c "mkdir -p /home/$USERNAME/Downloads && cp /root/arch_install/scripts/2-postinstall.sh /home/$USERNAME/Downloads/ && chown $USERNAME:$USERNAME /home/$USERNAME/Downloads/2-postinstall.sh && chmod +x /home/$USERNAME/Downloads/2-postinstall.sh"
+arch-chroot /mnt bash -c "cp -r /root/arch_install/dotfiles /home/$USERNAME/Downloads/ && chown -R $USERNAME:$USERNAME /home/$USERNAME/Downloads/dotfiles"
 
 success "Installation complete. Please reboot, then log in as $USERNAME and run:"
 echo "[!] After reboot, run: ~/Downloads/2-postinstall.sh"
