@@ -28,7 +28,8 @@ if [[ -z "$DISK" ]]; then
 fi
 
 log "Disk layout before partitioning:"; lsblk "$DISK"
-read -p "${YELLOW}WARNING: This will erase all data on $DISK. Continue? (y/N)${NC} " confirm
+echo -ne "${YELLOW}WARNING: This will erase all data on $DISK. Continue? (y/N)${NC} "
+read confirm
 [[ $confirm == [yY] ]] || { err "Aborted by user."; exit 1; }
 
 log "Setting keyboard layout and connecting to internet..."
@@ -40,17 +41,23 @@ cfdisk "$DISK"
 
 log "Disk layout after partitioning:"; lsblk "$DISK"
 
-# Verify partitions exist
-if [[ ! -b "${DISK}p1" || ! -b "${DISK}p2" ]]; then err "Partitions not found. Aborting."; exit 1; fi
+# After partitioning, detect correct partition names
+PART1="${DISK}1"
+PART2="${DISK}2"
+if [[ "$DISK" == *nvme* ]]; then
+  PART1="${DISK}p1"
+  PART2="${DISK}p2"
+fi
+if [[ ! -b "$PART1" || ! -b "$PART2" ]]; then err "Partitions not found. Aborting."; exit 1; fi
 
 log "Formatting partitions..."
-mkfs.fat -F32 "${DISK}p1"
-mkfs.btrfs -f "${DISK}p2"
+mkfs.fat -F32 "$PART1"
+mkfs.btrfs -f "$PART2"
 
 log "Mounting partitions..."
-mount "${DISK}p2" /mnt
+mount "$PART2" /mnt
 mkdir -p /mnt/boot
-mount "${DISK}p1" /mnt/boot
+mount "$PART1" /mnt/boot
 
 log "Installing base system..."
 pacstrap /mnt base linux linux-firmware btrfs-progs nano sudo
