@@ -70,6 +70,6 @@ grub-mkconfig -o /boot/grub/grub.cfg
 log "Enabling system services from services.txt..."
 while read -r svc; do
   systemctl enable --now "$svc"
-done < /root/arch_setup/scripts/services.txt
+done < /root/arch_install/scripts/services.txt
 
 success "Chroot setup complete."
