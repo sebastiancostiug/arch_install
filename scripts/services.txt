@@ -1,0 +1,8 @@
+gdm
+NetworkManager
+bluetooth
+cups.service
+acpid
+ntpd
+docker
+zerotier-one

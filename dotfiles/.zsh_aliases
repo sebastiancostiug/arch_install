@@ -1,0 +1,57 @@
+# --- Arch Linux aliases and update function ---
+alias install="sudo pacman -S"
+alias uninstall="sudo pacman -Rns"
+
+alias fp_install="flatpak install -y"
+alias fp_uninstall="flatpak uninstall --delete-data"
+
+update() {
+  echo "[+] Starting full system update..."
+  sudo pacman -Syu --noconfirm
+  echo "[+] System update complete."
+
+  # 1. Clean package cache
+  echo "[+] Cleaning package cache (keep last 3 versions)..."
+  sudo paccache -r -k3
+  echo "[+] List all cached packages:"
+  ls /var/cache/pacman/pkg/ | less
+  echo "[?] Remove all uninstalled packages from cache (sudo pacman -Sc)? [y/N] "
+  read -k1 reply; echo
+  if [[ $reply =~ ^[Yy]$ ]]; then
+    sudo pacman -Sc
+  fi
+  echo "[?] Remove ALL files from cache (sudo pacman -Scc)? [y/N] "
+  read -k1 reply; echo
+  if [[ $reply =~ ^[Yy]$ ]]; then
+    sudo pacman -Scc
+  fi
+
+  # 2. Remove orphaned/unused packages
+  echo "[+] Checking for orphaned packages..."
+  local orphans=$(pacman -Qtdq)
+  if [[ -n "$orphans" ]]; then
+    echo "Orphaned packages found: $orphans"
+    echo "[?] Remove all orphaned packages? [y/N] "
+    read -k1 reply; echo
+    if [[ $reply =~ ^[Yy]$ ]]; then
+      sudo pacman -Rns $orphans
+    fi
+  else
+    echo "No orphaned packages found."
+  fi
+
+  # 3. Clean home cache
+  echo "[+] Cleaning ~/.cache..."
+  rm -rf ~/.cache/*
+
+  # 4. Reminder about config files
+  echo "[i] Config files are stored in ~/.config/ (review manually if needed)."
+
+  # 5. Find and remove duplicates with rmlint
+  if ! command -v rmlint &>/dev/null; then
+    echo "[+] Installing rmlint for finding/removing duplicates..."
+    sudo pacman -S --noconfirm rmlint
+  fi
+  echo "[i] To find/remove duplicates, run: rmlint ~"
+}
+# --- End Arch Linux section ---

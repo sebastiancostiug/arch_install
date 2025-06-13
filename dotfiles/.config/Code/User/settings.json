@@ -1,0 +1,7 @@
+{
+  // Example VSCode settings
+  "workbench.colorTheme": "Default Dark+",
+  "editor.fontFamily": "Fira Code, monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14
+}

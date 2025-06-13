@@ -1,0 +1,23 @@
+[user]
+	name =
+	email =
+[color]
+	ui = auto
+[core]
+	editor = nano
+[init]
+	defaultBranch = master
+[push]
+	default = simple
+[pull]
+	rebase = false
+[merge]
+	tool = vimdiff
+[diff]
+	tool = vimdiff
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	cm = commit
+	last = log -1 HEAD
