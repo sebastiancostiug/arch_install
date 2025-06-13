@@ -1,5 +1,18 @@
 # Arch Installer
 
+## Overview
+
+This installer sets up a **minimal, modern Arch Linux system** with:
+
+- GNOME desktop environment (core GNOME apps and tweaks)
+- Gaming support (Steam, Vulkan, AMD drivers, Flatpak games)
+- Developer tools (base-devel, git, docker, nodejs, php, etc.)
+- BTRFS root filesystem and GRUB bootloader
+- Useful utilities (htop, mc, rsync, nano, etc.)
+- Optional AUR and Flatpak apps for productivity and customization
+
+**Result:** A clean, fast, and ready-to-use Arch Linux desktop for daily use, gaming, and development.
+
 ## What You Need
 
 - A computer you are willing to erase and set up from scratch (all data will be lost).
