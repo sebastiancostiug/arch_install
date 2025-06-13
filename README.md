@@ -1,36 +1,43 @@
 # Arch Installer
 
-## Overview
+## What You Need
 
-This installer sets up a **minimal, modern Arch Linux system** with:
+- A computer you are willing to erase and set up from scratch (all data will be lost).
+- A USB stick (at least 2GB) to create an Arch Linux Live USB.
+- Another computer to download and create the USB if needed.
+- Internet access during installation.
 
-- GNOME desktop environment (core GNOME apps and tweaks)
-- Gaming support (Steam, Vulkan, AMD drivers, Flatpak games)
-- Developer tools (base-devel, git, docker, nodejs, php, etc.)
-- BTRFS root filesystem and GRUB bootloader
-- Useful utilities (htop, mc, rsync, nano, etc.)
-- Optional AUR and Flatpak apps for productivity and customization
+---
 
-**Result:** A clean, fast, and ready-to-use Arch Linux desktop for daily use, gaming, and development.
+## Step-by-Step Installation
+
+1. **Create an Arch Linux Live USB**
+   - Download the Arch Linux ISO from [archlinux.org](https://archlinux.org/download/).
+   - Use a tool like [balenaEtcher](https://www.balena.io/etcher/) or [Rufus](https://rufus.ie/) to write the ISO to your USB stick.
+2. **Boot from the USB**
+   - Insert the USB stick into your computer and restart.
+   - Enter your BIOS/UEFI settings (usually by pressing F2, F10, F12, or DEL right after turning on your computer).
+   - Set the USB stick as the first boot device and save changes.
+   - Your computer should now boot into the Arch Linux installer.
+3. **Connect to the internet.**
+   - For Wi-Fi: Type `iwctl` and follow the prompts, or use `wifi-menu` if available.
+   - For Ethernet: It should connect automatically.
+4. **Open a terminal.**
+   - You should already be at a terminal prompt after booting. If not, press `Ctrl+Alt+F2` to open one.
 
 ---
 
 ## Requirements & Partitioning
 
-- **Requires:** Arch Linux Live USB, internet connection, basic Linux knowledge
-- **Disk layout:**
-
-  - The installer expects **2 partitions** on your target disk:
-    - **EFI partition:** ~512MB, type EFI System
-    - **Root partition:** Rest of disk, type Linux filesystem
-  - Example for `/dev/nvme1n1`:
-
-    - `/dev/nvme1n1p1` — EFI
-    - `/dev/nvme1n1p2` — Root
-
-  - They will be formatted by the script as FAT32 the EFI partition and BTRFS the root partition (you don't need to format them just provide the 2 partitions in you partition setup)
-
-  - Any other partitions can be created and handled separately but the installer needs these two
+- **WARNING: This process will erase all data on the selected disk. Make sure to back up your files first!**
+- You will need to create two partitions on your disk:
+  1. **EFI partition** (about 512MB, type “EFI System”)
+  2. **Root partition** (at least 10GB, type “Linux filesystem”)
+- The installer scripts will guide you through partitioning and after will handle formatting the required partitions automatically.
+- Example for `/dev/nvme1n1`:
+  - `/dev/nvme1n1p1` — EFI
+  - `/dev/nvme1n1p2` — Root
+- The installer will format the EFI partition as FAT32 and the root partition as BTRFS. You do not need to format them yourself, just create the partitions.
 
 ---
 
@@ -52,35 +59,41 @@ This installer sets up a **minimal, modern Arch Linux system** with:
 
 ## Getting Started
 
-1. **Boot from the Arch Linux Live USB.**
-2. **Connect to the internet.**
-   - For Wi-Fi: `iwctl` or `wifi-menu` (if available)
-   - For Ethernet: Should be automatic
-3. **Install git (required to clone this repo):**
-   ```bash
-   pacman -Sy git
-   ```
-4. **Clone this repository and make scripts executable:**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/archsetup.git
-   cd archsetup
-   chmod +x scripts/*.sh
-   ```
-5. **Start the installer:**
-   ```bash
-   ./install.sh
-   ```
-6. **Follow on-screen prompts for each phase.**
+1. **Install git (required to clone this repo):**
+   - Type:
+     ```sh
+     pacman -Sy git
+     ```
+   - If you see a prompt about proceeding, type `y` and press Enter.
+2. **Clone this repository and make scripts executable:**
+   - Type:
+     ```sh
+     git clone https://github.com/sebastiancostiug/arch_install
+     cd arch_install
+     chmod +x *.sh scripts/*.sh
+     ```
+3. **Start the installer:**
+   - Type:
+     ```sh
+     ./install.sh
+     ```
+   - Follow the on-screen prompts. You will be asked for your username, disk, and hostname.
+   - When asked for a disk, type `/dev/` folowed by the name exactly as shown in the list (e.g., `/dev/sda` or `/dev/nvme0n1`).
 
 ---
 
 ## After Installation: Final User Setup
 
-After the system reboots, log in as your new user and run the following to complete your user environment setup:
+After the system reboots, log in with the username you created.
 
-```zsh
-~/Downloads/2-postinstall.sh
-```
+1. **Open the Terminal application.**
+   - You can find it in the application menu or by pressing `Ctrl+Alt+T`.
+2. **Run the final setup script:**
+   - Type:
+     ```sh
+     ~/Downloads/2-postinstall.sh
+     ```
+   - Press Enter and follow any prompts.
 
 This will:
 
@@ -88,7 +101,7 @@ This will:
 - Install AUR and Flatpak apps
 - Finalize your user environment
 
-You can delete `~/Downloads/2-postinstall.sh` after setup is complete.
+After setup is complete, the script will automatically delete itself and the dotfiles from your Downloads folder to keep things tidy.
 
 ---
 
@@ -107,6 +120,14 @@ You can delete `~/Downloads/2-postinstall.sh` after setup is complete.
 - **Network issues:** Double-check your connection before running the installer.
 - **Partitioning errors:** Make sure you have backed up your data and selected the correct drives.
 - For more help, check the logs or script output.
+
+---
+
+## Need Help?
+
+If you get stuck, search for the error message online or ask for help on the [Arch Linux Forums](https://bbs.archlinux.org/) or [Reddit r/archlinux](https://www.reddit.com/r/archlinux/).
+
+Don’t be afraid to ask questions—everyone was a beginner once!
 
 ---
 
