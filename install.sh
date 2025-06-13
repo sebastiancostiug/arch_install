@@ -30,9 +30,9 @@ log "Starting Phase 1: Chroot Setup (system configuration)"
 echo "[+] Entering chroot for system configuration..."
 arch-chroot /mnt /root/arch_install/scripts/1-chrootsetup.sh "$USERNAME" "$HOSTNAME"
 
-log "Starting Phase 2: Post-install user setup (run as new user)"
-cp -r ./user-setup /mnt/home/"$USERNAME"/
-arch-chroot /mnt bash -c "cd /home/$USERNAME/user-setup && sudo -u $USERNAME ../scripts/2-postinstall.sh"
+log "Starting Phase 2: Post-install user setup (manual step)"
+arch-chroot /mnt bash -c "mkdir -p /home/$USERNAME/Downloads && cp /root/arch_install/scripts/2-postinstall.sh /home/$USERNAME/Downloads/ && chown $USERNAME:$USERNAME /home/$USERNAME/Downloads/2-postinstall.sh && chmod +x /home/$USERNAME/Downloads/2-postinstall.sh"
 
-success "Installation complete. You may now reboot."
-echo "[!] Reminder: Enable any optional manual tweaks post-reboot."
+success "Installation complete. Please reboot, then log in as $USERNAME and run:"
+echo "[!] After reboot, run: ~/Downloads/2-postinstall.sh"
+echo "[!] Reminder: You can delete ~/Downloads/2-postinstall.sh after setup is complete."

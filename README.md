@@ -2,61 +2,106 @@
 
 ## Overview
 
-This installer automates a complete Arch Linux setup with a custom user environment and software. The process is divided into three phases:
+This installer sets up a **minimal, modern Arch Linux system** with:
 
-- **Phase 0:** Base installation from the Arch Live USB (partitioning, base system, and initial setup)
-- **Phase 1:** System configuration inside the chroot environment (locale, users, bootloader, etc.)
-- **Phase 2:** User environment setup after the first boot (dotfiles, user packages, theming, etc.)
+- GNOME desktop environment (core GNOME apps and tweaks)
+- Gaming support (Steam, Vulkan, AMD drivers, Flatpak games)
+- Developer tools (base-devel, git, docker, nodejs, php, etc.)
+- BTRFS root filesystem and GRUB bootloader
+- Useful utilities (htop, mc, rsync, nano, etc.)
+- Optional AUR and Flatpak apps for productivity and customization
 
----
-
-## Prerequisites
-
-- Arch Linux Live USB
-- Internet connection
-- Familiarity with basic Linux commands
+**Result:** A clean, fast, and ready-to-use Arch Linux desktop for daily use, gaming, and development.
 
 ---
 
-## Usage
+## Requirements & Partitioning
+
+- **Requires:** Arch Linux Live USB, internet connection, basic Linux knowledge
+- **Disk layout:**
+
+  - The installer expects **2 partitions** on your target disk:
+    - **EFI partition:** ~512MB, type EFI System (FAT32)
+    - **Root partition:** Rest of disk, type Linux filesystem (formatted as BTRFS)
+  - Example for `/dev/nvme1n1`:
+
+    - `/dev/nvme1n1p1` — EFI (512MB, FAT32)
+    - `/dev/nvme1n1p2` — Root (BTRFS)
+
+  - Any other partitions can be created and handled separately but the installer needs these two
+
+---
+
+## Installation Phases
+
+- **Phase 0: Base Install**
+  - Run from the Arch Live USB
+  - Partition, format, and mount disks
+  - Install base system and copy setup scripts
+- **Phase 1: System Configuration**
+  - Run inside chroot
+  - Set timezone, locale, hostname, users, sudo, bootloader, and install all packages
+  - Enable system services
+- **Phase 2: User Environment Setup**
+  - Run as the new user after first boot
+  - Set up dotfiles, shell, AUR/Flatpak apps, and user environment
+
+---
+
+## Getting Started
 
 1. **Boot from the Arch Linux Live USB.**
-
 2. **Connect to the internet.**
-
    - For Wi-Fi: `iwctl` or `wifi-menu` (if available)
    - For Ethernet: Should be automatic
-
-3. **Clone this repository and enter the folder:**
-
+3. **Install git (required to clone this repo):**
+   ```bash
+   pacman -Sy git
+   ```
+4. **Clone this repository and make scripts executable:**
    ```bash
    git clone https://github.com/YOUR_USERNAME/archsetup.git
    cd archsetup
-   chmod +x *.sh user-setup/*.sh
+   chmod +x scripts/*.sh
    ```
-
-4. **Start the installation:**
-
+5. **Start the installer:**
    ```bash
    ./install.sh
    ```
+6. **Follow on-screen prompts for each phase.**
 
-5. **Follow on-screen prompts for each phase.**
+---
+
+## After Installation: Final User Setup
+
+After the system reboots, log in as your new user and run the following to complete your user environment setup:
+
+```zsh
+~/Downloads/2-postinstall.sh
+```
+
+This will:
+
+- Set up your dotfiles and shell
+- Install AUR and Flatpak apps
+- Finalize your user environment
+
+You can delete `~/Downloads/2-postinstall.sh` after setup is complete.
 
 ---
 
 ## Customization
 
-- Edit `packages.txt` and `services.txt` to add or remove software and services.
+- Edit `scripts/packages.txt` and `scripts/services.txt` to add or remove software and services.
 - Adjust scripts in `user-setup/` for user-specific configuration.
 - Review and modify any configuration files as needed for your setup.
-- To change shell aliases, edit `zsh_aliases`.
+- To change shell aliases, edit `dotfiles/zsh_aliases`.
 
 ---
 
 ## Troubleshooting
 
-- **Script fails to run:** Ensure all scripts are executable (`chmod +x *.sh user-setup/*.sh`).
+- **Script fails to run:** Ensure all scripts are executable (`chmod +x scripts/*.sh`).
 - **Network issues:** Double-check your connection before running the installer.
 - **Partitioning errors:** Make sure you have backed up your data and selected the correct drives.
 - For more help, check the logs or script output.
@@ -66,11 +111,11 @@ This installer automates a complete Arch Linux setup with a custom user environm
 ## Notes
 
 - **Backup your data!** This script will format drives and make system changes.
-- Tested with the latest Arch ISO as of [date].
+- Tested with the latest Arch ISO as of June 2025.
 
 ---
 
-# Folder Structure
+## Folder Structure
 
 - `install.sh` — Main entry point for the installer
 - `README.md` — Documentation
@@ -81,11 +126,7 @@ This installer automates a complete Arch Linux setup with a custom user environm
   - `1-chrootsetup.sh`
   - `2-postinstall.sh`
 
-# Setup
-
-Move all phase scripts into the `scripts/` folder for clarity. Update `install.sh` to reference them from `scripts/`.
-
-# Example Structure
+## Example Structure
 
 ```
 arch 2.0/
@@ -98,12 +139,6 @@ arch 2.0/
     ├── 1-chrootsetup.sh
     └── 2-postinstall.sh
 ```
-
-# Next Steps
-
-- Move the phase scripts into `scripts/`.
-- Update `install.sh` to call them from the new location.
-- Place any future helper scripts in `scripts/` as well.
 
 ## License
 
