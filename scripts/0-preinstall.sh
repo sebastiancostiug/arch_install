@@ -65,9 +65,10 @@ pacstrap /mnt base linux linux-firmware btrfs-progs nano sudo
 log "Generating fstab..."
 genfstab -U /mnt >> /mnt/etc/fstab
 
-log "Copying setup scripts to new system..."
-mkdir -p /mnt/root/arch_install/scripts
+log "Copying setup file to new system..."
 cp -r ./scripts /mnt/root/arch_install/
+cp -r ./dotfiles /mnt/root/arch_install/
+
 chmod +x /mnt/root/arch_install/scripts/*.sh
 
 success "Phase 0 complete. Ready for chroot."
