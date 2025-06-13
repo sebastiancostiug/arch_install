@@ -70,13 +70,13 @@ grub-mkconfig -o /boot/grub/grub.cfg
 log "Enabling system services from services.txt..."
 while read -r svc; do
   if systemctl list-unit-files | grep -q "^$svc"; then
-    systemctl enable --now "$svc"
+    systemctl enable "$svc"
   elif systemctl list-unit-files | grep -q "^$svc.service"; then
-    systemctl enable --now "$svc.service"
+    systemctl enable "$svc.service"
   elif [[ -x "/usr/bin/$svc" ]] && systemctl list-unit-files | grep -q ".service"; then
     match=$(systemctl list-unit-files | grep ".service" | grep -m1 "$svc")
     if [[ -n "$match" ]]; then
-      systemctl enable --now "${match%% *}"
+      systemctl enable "${match%% *}"
     else
       err "Service $svc exists as binary but no matching .service file found, skipping."
     fi
